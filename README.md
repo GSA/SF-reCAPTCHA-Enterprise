@@ -1,8 +1,4 @@
-# DEPRECATED 
-## This project repo is no longer being maintained.
-
-# code-gov-repo-template
-A basic template to use for all code.gov repositories which includes our standard documents and contact info. Using this as a base ensures that all of our community standards are followed.
+A code package to implement Google reCAPTCHA Enterprise on Salesforce sites and communities. 
 
 
 ## Project Name:
@@ -30,7 +26,4 @@ Finally, include a section for the license of your project.
 ## Questions?
 If you have questions, please feel free to contact us:  
 * Open an issue
-* [LinkedIn](https://www.linkedin.com/company/code-gov/)  
-* [Twitter](https://twitter.com/@CodeDotGov)  
-* [Email](mailto:code@gsa.gov)
-* Join our `#opensource-public` channel on Slack: https://chat.18f.gov/
+
