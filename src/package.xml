@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>recaptcha</fullName>
+    <types>
+        <members>HttpCallOutMockTest</members>
+        <members>Org_ReCAPTCHAHandler</members>
+        <members>Org_ReCAPTCHAHandlerLC</members>
+        <members>Org_ReCAPTCHAHandlerLCTest</members>
+        <members>Org_ReCAPTCHAHandlerTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Org_ReCAPTCHA</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>Code_Toggles__c.Message__c</members>
+        <members>Code_Toggles__c.On__c</members>
+        <members>Integration_Settings__c.Endpoint__c</members>
+        <members>Integration_Settings__c.Secret_Key__c</members>
+        <members>Integration_Settings__c.Site_Key__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Code_Toggles__c</members>
+        <members>Integration_Settings__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Google</members>
+        <members>Google_reCAPTCHA_Enterprise</members>
+        <name>RemoteSiteSetting</name>
+    </types>
+    <version>48.0</version>
+</Package>
