@@ -1,0 +1,43 @@
+<!-- Example Lightning Component which creates Account record with Captcha functionality on the form-->
+
+<aura:component controller="AccountExtension" implements="flexipage:availableForAllPageTypes,force:appHostable,forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="sitekey" type="string"/>
+    <aura:attribute name="integrationSettingsName" type="string"/>
+    <aura:attribute name="approvedHost" type="string"/>
+    <aura:attribute name="formMessage" type="string"/>
+    <aura:attribute name="createAcc" type="Account" default="{'sObjectType' : 'Account','Name' : '','Phone':''}"/>
+    <aura:attribute name="ifmsrc" type="String" default="/apex/Org_ReCAPTCHA"/> <!-- for communities, add <communityName>/apex/Org_ReCAPTCHA -->
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <form>
+        <lightning:input label="Name"
+                         type="text"
+                         required="true"
+                         aura:id="field"
+                         name="Name"
+                         value="{!v.createAcc.Name}"/>
+        
+        <lightning:input label="Phone"
+                         type="text"
+                         aura:id="field2"
+                         name="Phone" 
+                         value="{!v.createAcc.Phone}"/>
+        
+        <aura:if isTrue="{!v.formMessage}">
+            <ui:message severity="error" closable="false">
+                {!v.formMessage}
+            </ui:message>
+        </aura:if>
+        
+        <!-- Google Recaptcha widget is loaded from Visualforce page defined in the src attribute-->
+        <iframe aura:id="vfFrame"
+                id="vfFrame"
+                class="reCaptchaSmall"
+                src="{!v.ifmsrc}"
+                scrolling="no" frameborder="0" width="100%" allowtransparency="true"><!--height="500px" width="350px"-->
+        </iframe>
+        <p/>
+        
+        <lightning:button aura:id="submit-button" label="SUBMIT" type="submit" onclick="{!c.submitForm}" />    
+        
+    </form>
+</aura:component>

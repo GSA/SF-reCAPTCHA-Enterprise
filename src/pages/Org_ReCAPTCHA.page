@@ -1,0 +1,116 @@
+<apex:page showHeader="false">
+
+    <div id="widget1" class="g-recaptcha"></div>
+
+    <style>
+        body, div {
+            background: transparent !important;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var sitekey = null;
+    	//A workaround is needed to handle below hard-coded url else this visualforce page is not reusable across orgs.
+    	var lexUrl = 'https://gsa--eeodv93dvn.lightning.force.com';
+        var onloadCallback = function () {
+            grecaptcha.render('widget1', {
+                'sitekey': sitekey,
+                'callback': grecaptchaRenderCallback
+            });
+        };
+    
+    	var onloadCallbackEnterprise = function () {
+            grecaptcha.enterprise.render('widget1', {
+                'sitekey': sitekey,
+                'callback': grecaptchaRenderCallback
+            });
+        };
+
+        function grecaptchaRenderCallback(res) {
+            parent.postMessage({
+                action: "checkCAPTCHAState",
+                isValid: res ? true : false
+            }, '*');
+        }
+    
+    	// this function checks if captcha with image puzzle is active and sends post message to parent to increse height of iframe
+        function addObserverIfDesiredNodeAvailable() {    
+        var element = document.querySelector('iframe[src^="https://www.google.com/recaptcha"][src*="bframe"]');
+        //initially on page load, iframe for widget captcha is not visible, 
+            //below if condition checks every 2 seconds and restarts function
+        if(element==null) {
+            window.setTimeout(addObserverIfDesiredNodeAvailable,2000);
+            return;
+        }
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                //if (mutation.type == "attributes") {
+                if (mutation.target.clientHeight > 400){
+                parent.postMessage({ 'captchaVisible': "visible" }, lexUrl);}
+                //}
+            });
+        });
+        
+        observer.observe(element, {
+            attributes: true, //configure it to listen to attribute changes
+            //attributeFilter: ['style']
+            childList: true, subtree: true
+        });}
+    addObserverIfDesiredNodeAvailable();
+            
+
+
+        window.addEventListener("message", function(event) {
+            /*var subdomain = window.location.hostname.split(".")[0];
+            var instanceURL = subdomain.replace('--c','')
+            var lexUrl = 'https://'+instanceURL+'.lightning.force.com';
+            console.log(lexUrl);            
+            */
+            //A workaround is needed to handle below hard-coded url else this visualforce page is not reusable across orgs.
+            var lexUrl = 'https://gsa--eeodv93dvn.lightning.force.com';
+            if (event.data.type === 'captcha-vars') {
+                sitekey = event.data.key;
+                hostURL = event.data.hostURL;
+                integrationSettingsName = event.data.integrationSettingsName
+                /*
+                 * for controlling script load, iframe is added after sitekey is available along with correct script
+                 * for recaptcha vs enterprise
+                 */
+                var greCaptchaScript = document.getElementById('g-reCaptcha-script')
+
+                if (!greCaptchaScript) {
+                    var script = document.createElement('script');
+                    head = document.head || document.getElementsByTagName('head')[0];
+                    script.id = 'g-reCaptcha-script'
+                    if (integrationSettingsName==='reCAPTCHA')
+                    {script.src = 'https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit'}
+                    else{script.src = 'https://www.google.com/recaptcha/enterprise.js?onload=onloadCallbackEnterprise&render=explicit'}
+                    document.head.insertBefore(script, head.firstChild);
+                }
+            }
+            
+            //verify that the actual origin and the expected origin match, else reject the message if they don't.             
+            if (event.origin !== lexUrl){
+                return;
+            }
+            // check token availability and send appropriate message to component
+            if (event.data.action == "tokenAvailability"){
+                var token = document.getElementById("g-recaptcha-response").value;
+
+                if (token == ""){
+                    parent.postMessage({
+                        action: "tokenAvailability",
+                        tokenAvailable : "Not Available"
+                    }, lexUrl);
+                }  else {
+                    parent.postMessage({
+                        action: "tokenAvailability",
+                        tokenAvailable : "Available",
+                        response: token
+                    },  lexUrl);
+                }
+            }
+        }, false);
+
+    </script>
+</apex:page>

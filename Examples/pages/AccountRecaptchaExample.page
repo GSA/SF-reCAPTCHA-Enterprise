@@ -1,0 +1,47 @@
+<!-- example account record creation with recaptcha -->
+<apex:page standardController="Account" extensions="AccountExtension" id="pg">
+    <p/>
+    <apex:form >        
+        <apex:pageBlock title="Create/Update Account">
+            <apex:outputPanel id="panelForRerender">
+                <div style="color:Green;">{!successMessage}</div>
+                <apex:pageBlockSection columns="1">
+                    <apex:inputField value="{!account.name}"/> 
+                    <apex:inputField value="{!account.phone}" /> 
+                    <!-- CAPTCHA ERROR MESSAGE -->
+                    <div style="color:red;">{!errorMessage}</div>
+                    <!-- CAPTCHA WIDGET-->
+                    <div id="captcha" class="g-recaptcha" style="margin-top: 10px" data-sitekey="{!recaptchaHandler.captchaSitekey}" data-callback="recaptchaCallback" ></div>
+                </apex:pageBlockSection>                
+            </apex:outputPanel>
+            
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton id="cmdButton" value="Save" action="{!save}" reRender="panelForRerender" oncomplete="recordSave();" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        
+        <!-- depending on integration settings, regular vs enterprise, load correct recaptcha api js file -->
+        <apex:outputpanel rendered="{!recaptchaHandler.integrationSettingsName == 'reCAPTCHA_Enterprise'}">
+            <script src="https://www.google.com/recaptcha/enterprise.js?onload=onloadCallbackEnterprise&render=explicit"></script> 
+            </apex:outputPanel>
+            <apex:outputpanel rendered="{!recaptchaHandler.integrationSettingsName == 'reCAPTCHA'}">
+                <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"></script>            
+        </apex:outputPanel>      
+        
+    </apex:form>  
+    <script type="text/javascript">
+        function recordSave(){
+            if ({!recaptchaHandler.integrationSettingsName == 'reCAPTCHA_Enterprise'}){
+                onloadCallbackEnterprise();
+            }else{
+                onloadCallback();
+            }
+        }
+        var onloadCallback = function() {
+            grecaptcha.render('captcha', {'sitekey' : '{!recaptchaHandler.captchaSitekey}'});
+        };
+          var onloadCallbackEnterprise = function() {
+            grecaptcha.enterprise.render('captcha', {'sitekey' : '{!recaptchaHandler.captchaSitekey}'});
+        };
+        </script> 
+</apex:page>

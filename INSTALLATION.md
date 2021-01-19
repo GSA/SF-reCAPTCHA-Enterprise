@@ -58,8 +58,9 @@
 
 ### Configure Remote Site
 
-- Remote Site Name: Google_reCAPTCHA_Enterprise
-- Remote Site URL: https://recaptchaenterprise.googleapis.com
-- Description: Endpoint for Google reCAPTCHA Enterprise verification
+- Created automatically with 'src' deployment
 
 ### Custom Settings
+
+- Created automatically with 'src' deployment
+- Refer to main readme.md for custom settings records which needs to be created.
